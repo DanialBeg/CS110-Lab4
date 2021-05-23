@@ -1,6 +1,16 @@
-<h1> Room </h1>
-<p>This is a demo of chatroom page</p>
+<h1>Room {{roomName}}</h1>
+{{!-- <p>This is a demo of chatroom page</p>
 <p>
     The room you are visiting is {{ roomName }}
 </p>
-<p>To generate a new room, here is the room id: {{ newRoomId }}</p>
+<p>To generate a new room, here is the room id: {{ newRoomId }}</p> --}}
+
+<form action="/comment" method="POST">
+{{!-- <h3>Sending data to <span id="roomName">{{roomName}}</span></h3> --}}
+<input type="hidden" name="rName" value="{{roomName}}"/>
+<input type="text" name="userName" placeholder="Enter username"/>
+{{!-- <br>
+<br> --}}
+<input type="text" name="message" placeholder="Enter message"/>
+<input type="submit" value="Enter username"/> 
+</form>

@@ -36,15 +36,6 @@ mongoose
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
-// const newChatroom = new Chatroom ({
-//     name: 'Chatroom 1',
-//     messages: ['Yo', 'Hi'],
-// });
-// newUser
-//   .save()
-//   .then(item => console.log(item))
-//   .catch(err => console.log(err));
-
 // Create controller handlers to handle requests at each endpoint
 app.get('/getRoom', function(req, res){
   Room.find().lean().then(items => {
@@ -53,10 +44,30 @@ app.get('/getRoom', function(req, res){
 })
 app.post('/create', function(req, res){
   const newRoom = new Room({
-    name: req.body.roomName
+    name: req.body.roomName,
+    comments: [],
+    userComments: [],
+    dateArr: []
   })
   newRoom.save().then(console.log('Room added'))
   .catch(err => console.log(err));
+})
+app.post('/comment', function(req, res){
+  //console.log(req.body.rName);
+  db.collection.updateOne(
+    {'name': req.body.rName},
+    {
+      $set: {
+        name: req.body.userName
+      }
+    }
+  );
+  console.log(req.body.rName);
+  // const newRoom = new Room({
+  //   name: req.body.roomName
+  // })
+  // newRoom.save().then(console.log('Room added'))
+  // .catch(err => console.log(err));
 })
 app.get('/', homeHandler.getHome);
 app.get('/:roomName', roomHandler.getRoom);
