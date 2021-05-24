@@ -51,14 +51,21 @@ app.post('/create', function(req, res){
   })
   newRoom.save().then(console.log('Room added'))
   .catch(err => console.log(err));
+  var RoomS = mongoose.model('Room', newRoom);
 })
 app.post('/comment', function(req, res){
   //console.log(req.body.rName);
-  db.collection.updateOne(
+  //const Room = mongoose.model('test');
+
+  //const MyModel = mongoose.model('test', new Schema({ name: String }));
+  // const MyModel = mongoose.model('test', Room);
+  // MyModel.findOne(function(error, result) { /* ... */ });
+
+  RoomS.updateOne(
     {'name': req.body.rName},
     {
       $set: {
-        name: req.body.userName
+        comments: [req.body.userName]
       }
     }
   );

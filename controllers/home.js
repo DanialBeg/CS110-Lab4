@@ -17,5 +17,5 @@ function getHome(request, response){
 }
 
 module.exports = {
-    getHome
+  getHome
 };
