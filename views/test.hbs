@@ -1,0 +1,11 @@
+
+<script>
+    while(true){
+        var username = prompt('Please enter a username/nickname');
+        console.log("Username is " username);
+        // Done with help from https://stackoverflow.com/questions/10232366/how-to-check-if-a-variable-is-null-or-empty-string-or-all-whitespace-in-javascri
+        if(!username || username.match(/^ *$)){
+            alert('Please enter your username');
+        }
+    }
+</script>

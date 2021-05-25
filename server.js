@@ -5,7 +5,6 @@ const config = require('config');
 const cookieParser = require('cookie-parser');
 const hbs = require('express-handlebars');
 const path = require('path');
-const User = require('./models/User');
 const Room = require('./models/Rooms');
 const Chat = require('./models/Chat');
 
@@ -50,7 +49,7 @@ app.post('/create', function(req, res){
   });
   newRoom.save().then(console.log('Room added'))
   .catch(err => console.log(err));
-  res.redirect(302, '/'+req.body.roomName);
+  res.redirect(302, '/'+req.body.roomName+'/messages');
 })
 app.post('/comment', function(req, res){
   console.log(req.body.userName);
@@ -66,10 +65,11 @@ app.post('/comment', function(req, res){
   })
   newComment.save().then(console.log('Comment added'))
   .catch(err => console.log(err));
-  res.redirect(302, '/'+req.body.rName);
+  res.redirect(302, '/'+req.body.rName+'/messages');
 })
 app.get('/', homeHandler.getHome);
 app.get('/:roomName', roomHandler.getChat);
+app.get('/:roomName/messages', roomHandler.getChat);
 
 // NOTE: This is the sample server.js code we provided, feel free to change the structures
 
