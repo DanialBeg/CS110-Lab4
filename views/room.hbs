@@ -4,13 +4,28 @@
     The room you are visiting is {{ roomName }}
 </p>
 <p>To generate a new room, here is the room id: {{ newRoomId }}</p> --}}
+<div>
+    <form action="/comment" method="POST">
+    {{!-- <h3>Sending data to <span id="roomName">{{roomName}}</span></h3> --}}
+    <input type="hidden" name="rName" value="{{roomName}}"/>
+    <input type="text" name="userName" placeholder="Enter username"/>
+    {{!-- <br>
+    <br> --}}
+    <input type="text" name="message" placeholder="Enter message"/>
+    <input type="submit" value="Send message"/> 
+    </form>
 
-<form action="/comment" method="POST">
-{{!-- <h3>Sending data to <span id="roomName">{{roomName}}</span></h3> --}}
-<input type="hidden" name="rName" value="{{roomName}}"/>
-<input type="text" name="userName" placeholder="Enter username"/>
-{{!-- <br>
-<br> --}}
-<input type="text" name="message" placeholder="Enter message"/>
-<input type="submit" value="Enter username"/> 
-</form>
+    <br>
+
+    {{#if isAvailable}}
+    <ul>
+        {{#each chats}}
+            <div>{{this.username}}</div>
+            <div>{{this.dateOfEntry}}</div>
+            <div>{{this.message}}</div>
+            <br>
+            <br>
+        {{/each}}
+    </ul>
+    {{/if}}
+</div>

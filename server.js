@@ -7,6 +7,8 @@ const hbs = require('express-handlebars');
 const path = require('path');
 const User = require('./models/User');
 const Room = require('./models/Rooms');
+const Chat = require('./models/Chat');
+
 
 const db = config.get('mongoURI');
 
@@ -44,40 +46,30 @@ app.get('/getRoom', function(req, res){
 })
 app.post('/create', function(req, res){
   const newRoom = new Room({
-    name: req.body.roomName,
-    comments: [],
-    userComments: [],
-    dateArr: []
-  })
+    name: req.body.roomName
+  });
   newRoom.save().then(console.log('Room added'))
   .catch(err => console.log(err));
-  var RoomS = mongoose.model('Room', newRoom);
+  res.redirect(302, '/'+req.body.roomName);
 })
 app.post('/comment', function(req, res){
-  //console.log(req.body.rName);
-  //const Room = mongoose.model('test');
-
-  //const MyModel = mongoose.model('test', new Schema({ name: String }));
-  // const MyModel = mongoose.model('test', Room);
-  // MyModel.findOne(function(error, result) { /* ... */ });
-
-  RoomS.updateOne(
-    {'name': req.body.rName},
-    {
-      $set: {
-        comments: [req.body.userName]
-      }
-    }
-  );
-  console.log(req.body.rName);
-  // const newRoom = new Room({
-  //   name: req.body.roomName
-  // })
-  // newRoom.save().then(console.log('Room added'))
-  // .catch(err => console.log(err));
+  console.log(req.body.userName);
+  if(req.body.userName === undefined || req.body.userName.trim() === ""){
+    req.body.userName = 'default';
+    console.log('Yo');
+  }
+  const newComment = new Chat({
+    room: req.body.rName,
+    username: req.body.userName,
+    dateOfEntry: Date.now(),
+    message: req.body.message
+  })
+  newComment.save().then(console.log('Comment added'))
+  .catch(err => console.log(err));
+  res.redirect(302, '/'+req.body.rName);
 })
 app.get('/', homeHandler.getHome);
-app.get('/:roomName', roomHandler.getRoom);
+app.get('/:roomName', roomHandler.getChat);
 
 // NOTE: This is the sample server.js code we provided, feel free to change the structures
 
