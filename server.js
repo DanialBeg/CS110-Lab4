@@ -56,7 +56,7 @@ app.post('/create', function(req, res){
   });
   newRoom.save().then(console.log('Room added'))
   .catch(err => console.log(err));
-  res.redirect(302, '/'+req.body.roomName);
+  res.redirect(302, '/');
 })
 app.post('/comment', function(req, res){
   console.log(req.body.userName);

@@ -30,7 +30,9 @@
             return username;
         }
 
-        load = setInterval(function() {
+        var arr = [];
+
+        load = window.setInterval(async function() {
             fetch(url)
             .then(res => res.json()) .then(data => {  
                 var r = document.getElementById('roomInfo');
@@ -38,7 +40,6 @@
                 var outdiv = document.getElementById('newChat');
                 //console.log(outdiv.children);
                 var outc = outdiv.children;
-                var arr = [];
 
                 for(var j=0; j<outc.length; j++){
                     if(j%7 === 1)
@@ -46,19 +47,21 @@
                     //console.log(outc[j].id)
                 }
 
-                console.log(arr);
-                //console.log(r.value);
+                //console.log(arr);
                 for(var i = 0; i<data.length; i++){
                     var inArr = false;
-
+                    //console.log(data[i]);
                     for(var k=0; k<arr.length; k++){
                         if(data[i]._id === arr[k]){
                             inArr = true;
                         }
                     }
 
-                    if(r.value === data[i].room && !inArr){
+                    if((r.value === data[i].room) && !inArr){
+                        arr.push(data[i]._id);
+                        //console.log(arr);
                         //console.log(data[i].room);
+                        var n = document.createElement('div');
                         var newMessage = document.createElement('div');
                         var newuser = document.createElement('div');
                         var userEntry = document.createTextNode(data[i].username);
@@ -80,14 +83,16 @@
                         var br2 = document.createElement('br');
                         newMessage.appendChild(br1);
                         newMessage.appendChild(br2);
+                        n.appendChild(newMessage);
                         
-                        var curr = document.getElementById('newChat');
+                        var curr = document.getElementById('parent');
                         curr.appendChild(newMessage);
-                        document.body.insertBefore(newMessage, curr);
                         console.log('Added new message');
-                        arr.push(data[i]._id);
+                        curr.appendChild(newMessage);
+                        delete curr;
                     }
                 }
+                inArr = false;
             })
             .catch(err => {
                 // Error catching
@@ -107,17 +112,19 @@
     <br>
 
     {{#if isAvailable}}
-    <div id='newChat'>
-        {{#each chats}}
-            <br>
-            <div id={{this._id}}></div>
-            <div id='nickname'>{{this.username}}</div>
-            <div id='date'>{{this.dateOfEntry}}</div>
-            <div id='message'>{{this.message}}</div>
-            <br>
-            <br>
-        {{/each}}
-    </ul>
+    <div id="parent">
+        <div id='newChat'>
+            {{#each chats}}
+                <br>
+                <div id={{this._id}}></div>
+                <div id='nickname'>{{this.username}}</div>
+                <div id='date'>{{this.dateOfEntry}}</div>
+                <div id='message'>{{this.message}}</div>
+                <br>
+                <br>
+            {{/each}}
+        </div>
+    </div>
     {{/if}}
 
 </div>
