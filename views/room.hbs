@@ -4,28 +4,114 @@
     The room you are visiting is {{ roomName }}
 </p>
 <p>To generate a new room, here is the room id: {{ newRoomId }}</p> --}}
+
 <div>
+    <script>
+        const url = "http://localhost:3000/getChat";
+
+        function userInput() {
+            console.log('Yo');
+            var bool = false;
+            var input = document.getElementById("enterusername");
+            if(input.value === undefined || input.value.trim() === ""){
+                bool = true;
+            }
+            while(bool){
+                var username = prompt('Please enter a username/nickname');
+                console.log(username);
+                if(username){
+                    bool = false;
+                }
+            }
+            input.value = username;
+            return username;
+        }
+
+        load = window.setInterval(function() {
+            fetch(url)
+            .then(res => res.json()) .then(data => {  
+                var r = document.getElementById('roomInfo');
+
+                var outdiv = document.getElementById('newChat');
+                //console.log(outdiv.children);
+                var outc = outdiv.children;
+                var arr = [];
+
+                for(var j=0; j<outc.length; j++){
+                    arr.push(outc[j].id);
+                    //console.log(outc[j].id)
+                }
+
+                //console.log(r.value);
+                for(var i = 0; i<data.length; i++){
+                    var inArr = false;
+                    for(var k=0; k<arr.length; k++){
+                        if(data[i]._id === arr[k]){
+                            inArr = true;
+                        }
+                    }
+
+                    if(r.value === data[i].room && !inArr){
+                        //console.log(data[i].room);
+                        var newMessage = document.createElement('div');
+                        var newuser = document.createElement('div');
+                        var userEntry = document.createTextNode(data[i].username);
+                        //console.log(data[i].username);
+                        newuser.appendChild(userEntry);
+                        newMessage.appendChild(newuser);
+                        
+                        var newdate = document.createElement('div');
+                        var dentry = document.createTextNode(data[i].dateOfEntry);
+                        newdate.appendChild(dentry);
+                        newMessage.appendChild(newdate);
+
+                        var newmsg = document.createElement('div');
+                        var msg = document.createTextNode(data[i].message);
+                        newmsg.appendChild(msg);
+                        newMessage.appendChild(newmsg);
+
+                        var br1 = document.createElement('br');
+                        var br2 = document.createElement('br');
+                        newMessage.appendChild(br1);
+                        newMessage.appendChild(br2);
+                        
+                        var curr = document.getElementById('newChat');
+                        curr.appendChild(newMessage);
+                        document.body.insertBefore(newMessage, curr);
+                        console.log('Added new message');
+                        arr.push(data[i]._id);
+                    }
+                }
+            })
+            .catch(err => {
+                // Error catching
+                console.log(err) 
+            })
+        }, 3000);
+
+    </script>
     <form action="/comment" method="POST">
-    {{!-- <h3>Sending data to <span id="roomName">{{roomName}}</span></h3> --}}
-    <input type="hidden" name="rName" value="{{roomName}}"/>
-    <input type="text" name="userName" placeholder="Enter username"/>
-    {{!-- <br>
-    <br> --}}
-    <input type="text" name="message" placeholder="Enter message"/>
-    <input type="submit" value="Send message"/> 
+        <input id='roomInfo' type="hidden" name="rName" value="{{roomName}}"/>
+        <input id="enterusername" type="text" name="userName" placeholder="Enter username">
+        <input type="text" name="message" placeholder="Enter message">
+        <input type="submit" value="Send message" onclick="userInput()"> 
+        {{!-- <script type="text/javascript" src="/js/messages.js"></script> --}}
     </form>
 
     <br>
 
     {{#if isAvailable}}
-    <ul>
+    <div id='newChat'>
         {{#each chats}}
-            <div>{{this.username}}</div>
-            <div>{{this.dateOfEntry}}</div>
-            <div>{{this.message}}</div>
+            <br>
+            <div id={{this._id}}></div>
+            <div id='nickname'>{{this.username}}</div>
+            <div id='date'>{{this.dateOfEntry}}</div>
+            <div id='message'>{{this.message}}</div>
             <br>
             <br>
         {{/each}}
     </ul>
     {{/if}}
+
 </div>

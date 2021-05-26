@@ -7,6 +7,8 @@ const hbs = require('express-handlebars');
 const path = require('path');
 const Room = require('./models/Rooms');
 const Chat = require('./models/Chat');
+//const Messages = require('./js/messages');
+//const prompt = require('prompt-sync')();
 
 
 const db = config.get('mongoURI');
@@ -43,13 +45,18 @@ app.get('/getRoom', function(req, res){
     res.json(items)
   })
 })
+app.get('/getChat', function(req, res){
+  Chat.find().lean().then(items => {
+    res.json(items)
+  })
+})
 app.post('/create', function(req, res){
   const newRoom = new Room({
     name: req.body.roomName
   });
   newRoom.save().then(console.log('Room added'))
   .catch(err => console.log(err));
-  res.redirect(302, '/'+req.body.roomName+'/messages');
+  res.redirect(302, '/'+req.body.roomName);
 })
 app.post('/comment', function(req, res){
   console.log(req.body.userName);
@@ -65,11 +72,12 @@ app.post('/comment', function(req, res){
   })
   newComment.save().then(console.log('Comment added'))
   .catch(err => console.log(err));
-  res.redirect(302, '/'+req.body.rName+'/messages');
+  res.redirect(302, '/'+req.body.rName);
 })
 app.get('/', homeHandler.getHome);
 app.get('/:roomName', roomHandler.getChat);
 app.get('/:roomName/messages', roomHandler.getChat);
+
 
 // NOTE: This is the sample server.js code we provided, feel free to change the structures
 
