@@ -2,6 +2,7 @@
 
 ## Project Description
 <!-- you can include known bugs, design decisions, external references used... -->
+Type in `localhost:3000` in your browser to view the site!
 
 ## Ethics Questions
 
