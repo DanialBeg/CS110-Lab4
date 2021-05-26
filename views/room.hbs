@@ -16,6 +16,9 @@
             if(input.value === undefined || input.value.trim() === ""){
                 bool = true;
             }
+            else {
+                return username;
+            }
             while(bool){
                 var username = prompt('Please enter a username/nickname');
                 console.log(username);
@@ -27,7 +30,7 @@
             return username;
         }
 
-        load = window.setInterval(function() {
+        load = setInterval(function() {
             fetch(url)
             .then(res => res.json()) .then(data => {  
                 var r = document.getElementById('roomInfo');
@@ -38,13 +41,16 @@
                 var arr = [];
 
                 for(var j=0; j<outc.length; j++){
-                    arr.push(outc[j].id);
+                    if(j%7 === 1)
+                        arr.push(outc[j].id);
                     //console.log(outc[j].id)
                 }
 
+                console.log(arr);
                 //console.log(r.value);
                 for(var i = 0; i<data.length; i++){
                     var inArr = false;
+
                     for(var k=0; k<arr.length; k++){
                         if(data[i]._id === arr[k]){
                             inArr = true;
